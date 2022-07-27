@@ -214,20 +214,21 @@ function Part() {
 
 - 개인적으로 인터페이스 이름은 접두어를 붙이지 않는 편이 좋다고 생각한다.
 - 인터페이스 클래스 이름과 구현 클래스 이름 중 하나를 인코딩해야 한다면 구현 클래스 이름을 택하겠다
-
   - 인터페이스는 두 가지 관점으로 사용함
     1. 형식의 강제화: 인터페이스 정의한 메서드를 구현하지 않으면 오류 발생
     2. 다형성: 구현클래스를 교체하여 사용가능함.
   - 예를 들어 자바에서는 인터페이스 타입은 변수에 구현 클래스를 대입할 수 있음.
   - 또한 인터페이스 타입의 변수에서 메서드를 호출하면 구현 클래스의 메서드가 호출되는 구조(징검다리역할)
 
-  ```java
-  // java
-  ShapeFactory factory = new ShapeFactoryImp();
-  factory.createShape();  // ShapeFactoryImp의 메서드가 호출됨
-  factory = new ShapeFactoryImpV2();
-  factory.createShape();  // ShapeFactoryImpV2의 메서드가 호출됨
-  ```
+```java
+// java
+ShapeFactory factory = new ShapeFactoryImp();
+factory.createShape();  // ShapeFactoryImp의 메서드가 호출됨
+factory = new ShapeFactoryImpV2();
+factory.createShape();  // ShapeFactoryImpV2의 메서드가 호출됨
+```
+
+- C#에서는 주로 I를 인터페이스에 붙임, 타입스크립트에서는 컨벤션은 없어보임
 
 ```cs
 // C#
@@ -275,6 +276,19 @@ class Ball implements Pingable {
   }
 }
 
+interface ClockInterface {
+  currentTime: Date;
+  setTime(d: Date): void;
+}
+
+class Clock implements ClockInterface {
+  currentTime: Date = new Date();
+  setTime(d: Date) {
+    this.currentTime = d;
+  }
+  constructor(h: number, m: number) {}
+}
+
 // 자바와 동일하게 인터페이스 타입의 변수에 구현 클래스 타입 인스턴스를 대입 가능함
 // 인터페이스 타입의 변수에 속성을 읽으면 구현 클래스의 인스턴스의 속성이 읽어짐
 interface A {
@@ -289,7 +303,7 @@ let a: A = new C();
 console.log(a.x, a.y);
 ```
 
-- C#에서는 주로 I를 인터페이스에 붙임, 타입스크립트에서는 컨벤션은 없어보이나 하나로 통일하는게 좋아보임.
+- 타입스크립트에서도 하나로 통일하는게 좋아보임.
 - 컴포넌트명(함수명, 클래스명)과 인터페이스명이 겹치는 경우가 있어 I[이름][용도] 이런형태가 어떨런지
 
 ```tsx
