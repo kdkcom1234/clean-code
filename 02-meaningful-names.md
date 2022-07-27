@@ -195,6 +195,8 @@ function DtaRcrd102() {
   let genymdhms;
   let modymdhms;
   const pszqint = "102";
+
+  return { genymdhms, modymdhms, pszqint };
 }
 ```
 
@@ -204,6 +206,8 @@ function DtaRcrd102() {
   let genymdhms: Date;
   let modymdhms: Date;
   const pszqint = "102";
+
+  return { genymdhms, modymdhms, pszqint };
 }
 ```
 
@@ -215,6 +219,8 @@ function Customer() {
   let generationTimestamp;
   let modificationTimestamp;
   const recordId = "102";
+
+  return { generationTimestamp, modificationTimestamp, recordId };
 }
 ```
 
@@ -224,5 +230,7 @@ function Customer() {
   let generationTimestamp: Date;
   let modificationTimestamp: Date;
   const recordId = "102";
+
+  return { generationTimestamp, modificationTimestamp, recordId };
 }
 ```
