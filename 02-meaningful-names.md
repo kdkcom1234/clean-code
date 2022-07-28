@@ -214,7 +214,7 @@ function Part() {
 
 - 개인적으로 인터페이스 이름은 접두어를 붙이지 않는 편이 좋다고 생각한다.
 - 인터페이스 클래스 이름과 구현 클래스 이름 중 하나를 인코딩해야 한다면 구현 클래스 이름을 택하겠다
-  - 인터페이스는 두 가지 관점으로 사용함
+  - 코멘트: 인터페이스는 두 가지 관점으로 사용함
     1. 형식의 강제화: 인터페이스 정의한 메서드를 구현하지 않으면 오류 발생
     2. 다형성: 구현클래스를 교체하여 사용가능함.
   - 예를 들어 자바에서는 인터페이스 타입은 변수에 구현 클래스를 대입할 수 있음.
@@ -323,6 +323,7 @@ function Header({ title }: IHeader) {
   return <div>{title}</div>;
 }
 
+// 현재 쓰는 방법
 // I[이름][용도]
 interface IHeaderProps {
   title: string;
@@ -337,5 +338,105 @@ interface IProfileData {
 }
 function Profile() {
   let profileData: IProfileData = { userName: "고대근" };
+}
+```
+
+## 자신의 기억력을 자랑하지 마라
+
+- 독자가 코드를 읽으면서 변수 이름을 자신이 아는 이름으로 변환해야 한다면 그 변수 이름은 바람직하지 못하다
+- r이라는 변수가 호스트와 프로토콜을 제외한 소문자 URL이라는 사실을 언제나 기억한다면 확실히 똑똑한 사람이다.
+
+## 클래스 이름
+
+- 클래스 이름과 객체 이름은 명사나 명사구가 적합하다. 동사는 사용하지 않는다.
+- 덧: 일반적인 명사는 피하라는 것 같음
+
+### X
+
+```
+Manager, Processor, Data, Info
+```
+
+### O
+
+```
+Customer, WikiPage, Account, AddressParser
+```
+
+## 메서드 이름
+
+- 메서드 이름은 동사나 동사구가 적합하다.
+
+```
+postPayment, deletePage, save
+```
+
+- 접근자Accessor, 변경자Mutator, 조건자Predicate는 javabean 표준4에 따 라 값 앞에 get, set, is를 붙인다.
+
+```js
+const name = employee.getName();
+customer.setName("mike");
+if (paycheck.isPosted()) {
+}
+```
+
+- 생성자 오버로딩, 정적 팩터리 메서드를 사용하는 것이 좋다.(자바 스타일)
+- 참고: https://tecoble.techcourse.co.kr/post/2020-05-26-static-factory-method/
+
+```java
+// java
+// O
+Complex fulcrumPoint = Complex.FromRealNumber(23.0);
+// X
+Complex fulcrumPoint = new Complex(23.0);
+```
+
+- 타입스크립트 생성자 오버로딩 참고
+
+```ts
+interface IBox {
+  x: number;
+  y: number;
+  height: number;
+  width: number;
+}
+
+class Box {
+  public x: number;
+  public y: number;
+  public height: number;
+  public width: number;
+
+  constructor(obj?: IBox) {
+    this.x = obj?.x ?? 0;
+    this.y = obj?.y ?? 0;
+    this.height = obj?.height ?? 0;
+    this.width = obj?.width ?? 0;
+  }
+}
+```
+
+```ts
+interface IBox {
+  x: number;
+  y: number;
+  height: number;
+  width: number;
+}
+
+class Box {
+  public x: number;
+  public y: number;
+  public height: number;
+  public width: number;
+
+  constructor();
+  constructor(obj: IBox);
+  constructor(obj?: IBox) {
+    this.x = obj?.x ?? 0;
+    this.y = obj?.y ?? 0;
+    this.height = obj?.height ?? 0;
+    this.width = obj?.width ?? 0;
+  }
 }
 ```
