@@ -391,7 +391,8 @@ Complex fulcrumPoint = Complex.FromRealNumber(23.0);
 Complex fulcrumPoint = new Complex(23.0);
 ```
 
-- 타입스크립트 생성자 오버로딩 참고
+- 타입스크립트 생성자 오버로딩
+- 참고: https://stackoverflow.com/questions/12702548/constructor-overload-in-typescript
 
 ```ts
 interface IBox {
@@ -440,3 +441,117 @@ class Box {
   }
 }
 ```
+
+```ts
+class Patient {
+  static fromInsurance({
+    first,
+    middle = "",
+    last,
+    birthday,
+    gender,
+  }: InsuranceCustomer): Patient {
+    return new this(
+      `${last}, ${first} ${middle}`.trim(),
+      utils.age(birthday),
+      gender
+    );
+  }
+
+  constructor(
+    public name: string,
+    public age: number,
+    public gender?: string
+  ) {}
+}
+
+interface InsuranceCustomer {
+  first: string;
+  middle?: string;
+  last: string;
+  birthday: string;
+  gender: "M" | "F";
+}
+
+const utils = {
+  /* included in the playground link below */
+};
+
+{
+  // Two ways of creating a Patient instance
+  const jane = new Patient("Doe, Jane", 21),
+    alsoJane = Patient.fromInsurance({
+      first: "Jane",
+      last: "Doe",
+      birthday: "Jan 1, 2000",
+      gender: "F",
+    });
+
+  console.clear();
+  console.log(jane);
+  console.log(alsoJane);
+}
+```
+
+## 기발한 이름은 피하라
+
+- 이름이 너무 기발하면 저자와 유머 감각이 비슷한 사람만, 그리고 농담을 기억 하는 동안만, 이름을 기억한다.
+
+### X
+
+```
+HolyHandGrenade, whack(), eatMyShort()
+```
+
+### O
+
+```
+DeleteItems, kill(), Abort()
+```
+
+## 한 개념에 한 단어를 사용하라
+
+- 추상적인 개념 하나에 단어 하나를 선택해 이를 고수한다.
+- 예를 들어, 똑같은 메서드를 클래스마다 fetch, retrieve, get으로 제각각 부르면 혼란스럽다.
+- DeviceManager, ProtocolController
+
+## 말장난을 하지 마라
+
+- 프로그래머는 코드를 최대한 이해하기 쉽게 짜야 한다.
+- 집중적인 탐구가 필요 한 코드가 아니라 대충 훑어봐도 이해할 코드 작성이 목표다
+- 예) add는 두개 더하기, insert/append는 기존 집합에 추가하기
+
+# 해법 영역(Solution Domain)에서 가져온 이름을 사용하라
+
+- 코드를 읽을 사람도 프로그래머라는 사실을 명심한다.
+- 그러므로 전산 용어, 알고리즘 이름, 패턴 이름, 수학 용어 등을 사용해도 괜찮다.
+- Visitor패턴: AccountVisitor, Queue자료구조: JobQueue
+- Visitor 패턴 참고: https://velog.io/@newtownboy/%EB%94%94%EC%9E%90%EC%9D%B8%ED%8C%A8%ED%84%B4-%EB%B0%A9%EB%AC%B8%EC%9E%90%ED%8C%A8%ED%84%B4Visitor-Pattern
+
+# 문제 영역(Problem Domain)에서 가져온 이름을 사용하라
+
+- 코드를 보수하는 프로그래머가 분야 전문가에게 의미를 물어 파악할 수 있다.
+- 우수한 프로그래머와 설계자라면 해법 영역과 문제 영역을 구분할 줄 알아야 한다.
+
+# 의미 있는 맥락을 추가하라
+
+- 클래스, 함수, 이름 공간에 넣어 맥락을 부여
+- 모든 방법이 실패하면 마지막 수단으로 접두어를 붙인다.
+- 예) firstName, lastName, street, houseNumber, city, state, zipcode
+- 같이 봤을 때 state가 '주' 인걸 알 수 있지만, 따로 state만 봤을 떄는 무엇인지 알기 어렵다.
+
+### O
+
+```js
+Address.state;
+address().state;
+addrState;
+```
+
+--
+
+1. 책에서 기억하고 싶은 내용
+   1. 말장난을 하지 마라
+      1. 집중적인 탐구가 필요 한 코드가 아니라 대충 훑어봐도 이해할 코드 작성이 목표다
+2. 떠오르는 생각/느낀 점
+3. 궁금한 내용
