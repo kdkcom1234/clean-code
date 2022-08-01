@@ -83,7 +83,8 @@ accountGroup, bunchOfAccounts, accounts
 
 ## 의미 있게 구분하라
 
-- 컴파일러를 통과할지라도 연속된 숫자를 덧붙이거나 불용어noise word를 추가하는 방식은 적절하지 못하다. 이름이 달라야 한다면 의미도 달라져야 한다.
+- 컴파일러를 통과할지라도 연속된 숫자를 덧붙이거나 불용어noise word를 추가하는 방식은 적절하지 못하다.
+- 이름이 달라야 한다면 의미도 달라져야 한다.
 
 ### X
 
@@ -212,11 +213,11 @@ function Part() {
 
 [인터페이스 클래스와 구현 클래스]
 
-- 개인적으로 인터페이스 이름은 접두어를 붙이지 않는 편이 좋다고 생각한다.
+- 인터페이스 이름은 접두어를 붙이지 않는 편이 좋다고 생각한다.
 - 인터페이스 클래스 이름과 구현 클래스 이름 중 하나를 인코딩해야 한다면 구현 클래스 이름을 택하겠다
-  - 코멘트: 인터페이스는 두 가지 관점으로 사용함
-    1. 형식의 강제화: 인터페이스 정의한 메서드를 구현하지 않으면 오류 발생
-    2. 다형성: 구현클래스를 교체하여 사용가능함.
+  - (코멘트): 인터페이스는 두 가지 관점으로 사용함
+    1. 형식의 강제화(설계): 인터페이스 정의한 메서드를 구현하지 않으면 오류 발생
+    2. 다형성(유지보수): 구현클래스를 교체하여 사용가능함.
   - 예를 들어 자바에서는 인터페이스 타입은 변수에 구현 클래스를 대입할 수 있음.
   - 또한 인터페이스 타입의 변수에서 메서드를 호출하면 구현 클래스의 메서드가 호출되는 구조(징검다리역할)
 
@@ -417,30 +418,7 @@ class Box {
 }
 ```
 
-```ts
-interface IBox {
-  x: number;
-  y: number;
-  height: number;
-  width: number;
-}
-
-class Box {
-  public x: number;
-  public y: number;
-  public height: number;
-  public width: number;
-
-  constructor();
-  constructor(obj: IBox);
-  constructor(obj?: IBox) {
-    this.x = obj?.x ?? 0;
-    this.y = obj?.y ?? 0;
-    this.height = obj?.height ?? 0;
-    this.width = obj?.width ?? 0;
-  }
-}
-```
+- 타입스크립트 정적 팩터리 메서드
 
 ```ts
 class Patient {
@@ -548,10 +526,98 @@ address().state;
 addrState;
 ```
 
---
+- number, verb, pluralModifier라는 변수 세 개가 ‘통계추측(guess statistics)’ 메시지에 사용됨
+
+### X
+
+```js
+function printGuessStatistics(candidate, count) {
+  let number;
+  let verb;
+  let pluralModifier;
+
+  if (count === 0) {
+    number = "no";
+    verb = "are";
+    pluralModifier = "s";
+  } else if (count === 1) {
+    number = "1";
+    verb = "is";
+    pluralModifier = "";
+  } else {
+    number = "" + count;
+    verb = "are";
+    pluralModifier = "s";
+  }
+
+  const guessMessage = `There ${verb} ${number} ${candidate}${pluralModifier}`;
+  console.log(guessMessage);
+}
+```
+
+### O
+
+```js
+function GuessStatisticsMessage() {
+  let number;
+  let verb;
+  let pluralModifier;
+
+  function make(candidate, count) {
+    createPluralDependentMessageParts(count);
+    return `There ${verb} ${number} ${candidate}${pluralModifier}`;
+  }
+
+  function createPluralDependentMessageParts(count) {
+    if (count === 0) {
+      thereAreNoLetters();
+    } else if (count === 1) {
+      thereIsOneLetter();
+    } else {
+      thereAreManyLetters(count);
+    }
+  }
+
+  function thereAreManyLetters(count) {
+    number = "" + count;
+    verb = "are";
+    pluralModifier = "s";
+  }
+
+  function thereIsOneLetter() {
+    number = "1";
+    verb = "is";
+    pluralModifier = "";
+  }
+
+  function thereAreNoLetters() {
+    number = "no";
+    verb = "are";
+    pluralModifier = "s";
+  }
+
+  return { make };
+}
+```
+
+# 불필요한 맥락을 없애라
+
+- 함수/클래스 이름에 애플리케이션 이름을 넣는 것은 부적절
+- 예) GSD(Gas Station Deluxe) 애플리케이션, GSDAccountAddress
+
+# 마치면서
+
+- 우리는 문장이나 문단처럼 읽히는 코드 아니면 (정보를 표시하는 최선의 방법이 항상 문장만은 아니므로)
+  적어도 표나 자료 구조처럼 읽히는 코드를 짜는 데만 집중해야 마땅하다.
+
+---
 
 1. 책에서 기억하고 싶은 내용
-   1. 말장난을 하지 마라
-      1. 집중적인 탐구가 필요 한 코드가 아니라 대충 훑어봐도 이해할 코드 작성이 목표다
+
+- 의도를 분명히 밝혀라
+  - 따로 주석이 필요하다면 의도를 분명히 드러내지 못했다는 말이다.
+- 말장난을 하지 마라
+  - 집중적인 탐구가 필요 한 코드가 아니라 대충 훑어봐도 이해할 코드 작성이 목표다
+
 2. 떠오르는 생각/느낀 점
 3. 궁금한 내용
