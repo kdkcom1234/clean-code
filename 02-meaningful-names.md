@@ -396,6 +396,7 @@ Complex fulcrumPoint = new Complex(23.0);
 - 참고: https://stackoverflow.com/questions/12702548/constructor-overload-in-typescript
 
 ```ts
+// ts
 interface IBox {
   x: number;
   y: number;
@@ -421,6 +422,7 @@ class Box {
 - 타입스크립트 정적 팩터리 메서드
 
 ```ts
+// ts
 class Patient {
   static fromInsurance({
     first,
