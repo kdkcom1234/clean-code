@@ -623,3 +623,100 @@ function GuessStatisticsMessage() {
 
 2. 떠오르는 생각/느낀 점
 3. 궁금한 내용
+
+---
+
+### 이전 코드
+
+```ts
+// 수량값을 입력 받아 세자릿수 컴마룰 입력해주는 함수
+// 함수 정의
+export const formatComma = (amount: string) => {
+  amount = amount.replaceAll(",", "");
+  if (amount.length === 0) {
+    // 입력값 없음
+    return amount;
+  } else if (amount === ".") {
+    // . 입력
+    return "0.";
+  } else if (amount[amount.length - 1] === ".") {
+    // xxxxx. 입력
+    return new BigNumber(amount.replace(".", "")).toFormat() + ".";
+  } else if (amount.split(".")[1]?.length) {
+    // xxxxx.yy 입력
+    return new BigNumber(amount).toFormat(amount.split(".")[1].length);
+  } else {
+    // xxxxx 입력
+    return new BigNumber(amount).toFormat();
+  }
+};
+
+// 함수 사용
+setValue(formatComma(text));
+```
+
+### 적용한 코드
+
+```ts
+// AmmountFormat: 수량을 포맷팅해주는 객체
+// ㄴ addThousandSeparator 입력값을 받아 세자릿수 컴마룰 입력해주는 함수
+// 함수 정의
+const Amount = {
+  addThousandSeparator: (inputAmount: string) => {
+    const amount = removeComma(inputAmount);
+
+    if (amount.length === 0) {
+      return empty();
+    } else if (amount === ".") {
+      return zeroWithDotTrailing();
+    } else if (amount[amount.length - 1] === ".") {
+      return numbersWithDotTrailing(amount);
+    } else if (amount.split(".")[1]?.length) {
+      return decimalNumbers(amount);
+    } else {
+      return integerNumbers(amount);
+    }
+
+    function removeComma(amount: string) {
+      return amount.replaceAll(",", "");
+    }
+    function empty() {
+      return "";
+    }
+    function zeroWithDotTrailing() {
+      return "0.";
+    }
+    function numbersWithDotTrailing(amount: string) {
+      return new BigNumber(amount.replace(".", "")).toFormat() + ".";
+    }
+    function decimalNumbers(amount: string) {
+      return new BigNumber(amount).toFormat(amount.split(".")[1].length);
+    }
+    function integerNumbers(amount: string) {
+      return new BigNumber(amount).toFormat();
+    }
+  },
+};
+
+export const Format = { Amount };
+
+// 함수 사용
+setValue(Format.Amount.addThousandSeparator(text));
+```
+
+```ts
+// 덧) bignumber.js에서 구분자 처리해주나 입력값이 문자열이여서 일부 예외처리 해주어야함
+// 컨피그
+BigNumber.config({
+  EXPONENTIAL_AT: 100,
+  ROUNDING_MODE: BigNumber.ROUND_DOWN, //내림
+  FORMAT: {
+    prefix: "",
+    decimalSeparator: ".",
+    groupSeparator: ",",
+    groupSize: 3,
+    secondaryGroupSize: 0,
+    suffix: "",
+  },
+});
+```
