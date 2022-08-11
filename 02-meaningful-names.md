@@ -703,7 +703,9 @@ const Amount = {
   },
 };
 
-export const Format = { Amount };
+const Format = { Amount };
+
+export default Format;
 
 // 함수 사용
 setValue(Format.Amount.addThousandSeparator(text));
